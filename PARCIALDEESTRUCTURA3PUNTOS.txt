@@ -1,0 +1,234 @@
+JUAN CAMILO BAEZ BAUTISTA
+JULIAN DAVID ORTIZ MOLINA
+BRANDON STICK BUITRAGO RUIZ
+
+///PRIMER PUNTO ARBOL////
+
+#include <iostream>
+
+using namespace std;
+
+struct Nodo {
+    int valor;
+    Nodo* izquierda;
+    Nodo* derecha;
+    Nodo* padre;
+};
+
+Nodo* arbol = NULL;
+
+Nodo* crearNodo(int valor, Nodo* padre = NULL) {
+    Nodo* nuevoNodo = new Nodo;
+    nuevoNodo->valor = valor;
+    nuevoNodo->izquierda = NULL;
+    nuevoNodo->derecha = NULL;
+    nuevoNodo->padre = padre;
+    return nuevoNodo;
+}
+
+
+
+// Declaración de minimoNodo antes de su uso
+Nodo* minimoNodo(Nodo*& nodo);
+
+void insertarNodo(Nodo*& arbol, int valor, Nodo* padre = NULL) {
+    if (!arbol) {
+        arbol = crearNodo(valor, padre);
+    } else if (valor < arbol->valor) {
+        insertarNodo(arbol->izquierda, valor, arbol);
+    } else {
+        insertarNodo(arbol->derecha, valor, arbol);
+    }
+}
+
+
+void mostrarArbol(Nodo*& arbol, int nivel = 0) {
+    if (!arbol) return;
+
+    mostrarArbol(arbol->derecha, nivel + 1);
+
+    for (int i = 0; i < nivel; i++) {
+        cout << "  ";
+    }
+    cout << arbol->valor << " (Nivel " << nivel << ")" << endl;
+
+    mostrarArbol(arbol->izquierda, nivel + 1);
+}
+
+bool buscarNodoArbol(Nodo*& arbol, int valor) {
+    if (!arbol) return false;
+    
+    if (arbol->valor == valor) return true;
+    
+    if (valor < arbol->valor) {
+        return buscarNodoArbol(arbol->izquierda, valor);
+    } else {
+        return buscarNodoArbol(arbol->derecha, valor);
+    }
+}
+
+void preorden(Nodo*& arbol) {
+    if (!arbol) return;
+    
+    cout << arbol->valor << " ";
+    preorden(arbol->izquierda);
+    preorden(arbol->derecha);
+}
+
+
+Nodo* minimoNodo(Nodo*& nodo) {
+    while (nodo->izquierda) {
+        nodo = nodo->izquierda;
+    }
+    return nodo;
+}
+
+void menu() {
+    int opcion;
+    do {
+        cout << "\nMENU:\n";
+        cout << "1. Insertar nodo\n";
+        cout << "2. Mostrar árbol\n";
+        cout << "3. Buscar nodo\n";
+        cout << "4. Recorrido preorden\n";
+        cout << "Ingrese una opción: ";
+        cin >> opcion;
+
+        switch (opcion) {
+            case 1:
+                int valor;
+                cout << "Ingrese el valor del nodo a insertar: ";
+                cin >> valor;
+                insertarNodo(arbol, valor);
+                break;
+            case 2:
+                cout << "ÁRBOL BINARIO DE BÚSQUEDA:\n";
+                mostrarArbol(arbol);
+                break;
+            case 3:
+                cout << "Ingrese el valor a buscar: ";
+                cin >> valor;
+                if (buscarNodoArbol(arbol, valor)) {
+                    cout << "El valor " << valor << " se encuentra en el árbol.\n";
+                } else {
+                    cout << "El valor " << valor << " no se encuentra en el árbol.\n";
+                }
+                break;
+            case 4:
+                cout << "Recorrido preorden: ";
+                preorden(arbol);
+                cout << endl;
+                break;
+        
+            case 0:
+                cout << "Saliendo del programa.\n";
+                break;
+            default:
+                cout << "Opción no válida. Intente nuevamente.\n";
+        }
+    } while (opcion != 0);
+}
+
+int main() {
+    menu();
+    return 0;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//PUNTO2//
+
+#include <iostream>
+#include <vector>
+
+void swap(int& a, int& b) {
+    int temp = a;
+    a = b;
+    b = temp;
+}
+
+int partition(std::vector<int>& arr, int low, int high) {
+    int pivot = arr[high]; 
+    int i = (low - 1); 
+
+    for (int j = low; j <= high - 1; j++) {
+        
+        if (arr[j] <= pivot) {
+            i++; 
+            swap(arr[i], arr[j]);
+        }
+    }
+    swap(arr[i + 1], arr[high]);
+    return (i + 1);
+}
+
+void quickSort(std::vector<int>& arr, int low, int high) {
+    if (low < high) {
+        int pi = partition(arr, low, high);
+        quickSort(arr, low, pi - 1);
+        quickSort(arr, pi + 1, high);
+    }
+}
+
+int main() {
+    std::vector<int> arr = {12, 11, 13, 5, 6};
+    int n = arr.size();
+
+    std::cout << "Arreglo original:" << std::endl;
+    for (int i = 0; i < n; i++) {
+        std::cout << arr[i] << " ";
+    }
+    std::cout << std::endl;
+
+    quickSort(arr, 0, n - 1);
+
+    std::cout << "Arreglo ordenado:" << std::endl;
+    for (int i = 0; i < n; i++) {
+        std::cout << arr[i] << " ";
+    }
+    std::cout << std::endl;
+
+    return 0;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+///PUNTO 3
+
+#include <iostream>
+#include <vector>
+
+int busquedaBinaria(const std::vector<int>& lista, int valor) {
+    int izquierda = 0;
+    int derecha = lista.size() - 1;
+
+    while (izquierda <= derecha) {
+        int medio = izquierda + (derecha - izquierda) / 2;
+
+        if (lista[medio] == valor) {
+            return medio;
+        } else if (lista[medio] < valor) {
+            izquierda = medio + 1;
+        } else {
+            derecha = medio - 1;
+        }
+    }
+
+    return -1;
+}
+
+int main() {
+    std::vector<int> miLista = {1, 3, 5, 7, 9, 11, 13};
+    int valorABuscar = 7;
+    int posicion = busquedaBinaria(miLista, valorABuscar);
+
+    if (posicion != -1) {
+        std::cout << "El valor" << " se encuentra en la posición " << posicion << "." << std::endl;
+    } else {
+        std::cout << "El valor "<< " no se encuentra en la lista." << std::endl;
+    }
+
+    return 0;
+}
